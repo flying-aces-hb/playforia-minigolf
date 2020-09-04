@@ -16,6 +16,7 @@
     <properties>
         <project.mainClass>org.moparforia.client.Launcher</project.mainClass>
         <project.name>Playforia Minigolf Client</project.name>
+        <project.shortname>MinigolfClient</project.shortname>
     </properties>
 
     <dependencies>
@@ -70,20 +71,44 @@
                 <artifactId>appbundle-maven-plugin</artifactId>
                 <version>1.2.0</version>
                 <configuration>
-                    <bundleName>${project.name}</bundleName>
+                    <bundleName>${project.shortname}</bundleName>
                     <iconFile>src/main/resources/icons/playforia.icns</iconFile>
                     <mainClass>${project.mainClass}</mainClass>
                     <generateDiskImageFile>true</generateDiskImageFile>
+                    <jrePath>../downloads/osx-jre/</jrePath>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>osx-build</id>
+                        <id>osx-bundle</id>
                         <phase>package</phase>
                         <goals>
                             <goal>bundle</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>osx-img</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>${basedir}/tools/build_img.sh</executable>
+                    <arguments>
+                        <argument>"${project.shortname}"</argument>
+                        <argument>"${project.version}"</argument>
+                        <argument>"${project.name}"</argument>
+                        <argument>"${project.build.directory}/${artifactId}-${project.version}/${project.shortname}.app"</argument>
+                        <argument>"${project.build.directory}/${artifactId}-${project.version}.img"</argument>
+                    </arguments>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
