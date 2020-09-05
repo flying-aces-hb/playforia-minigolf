@@ -88,29 +88,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>osx-img</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>${basedir}/tools/build_img.sh</executable>
-                    <arguments>
-                        <argument>"${project.shortname}"</argument>
-                        <argument>"${project.version}"</argument>
-                        <argument>"${project.name}"</argument>
-                        <argument>"${project.build.directory}/${artifactId}-${project.version}/${project.shortname}.app"</argument>
-                        <argument>"${project.build.directory}/${artifactId}-${project.version}.img"</argument>
-                    </arguments>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
                 <version>1.7.25</version>
