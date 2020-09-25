@@ -1,0 +1,59 @@
+diff --git a/server/src/org/moparforia/server/track/TrackCategory.java b/server/src/org/moparforia/server/track/TrackCategory.java
+index d84f0a2..0182df6 100644
+--- a/server/src/org/moparforia/server/track/TrackCategory.java
++++ b/server/src/org/moparforia/server/track/TrackCategory.java
+@@ -6,7 +6,7 @@ package org.moparforia.server.track;
+  */
+ public enum TrackCategory {
+ 
+-    UNKNOWN("?", -1), ALL("-", 0), BASIC("basic", 1), TRADITIONAL("traditional", 2), MODERN("modern", 3), HIO("hio", 4), SHORT("short", 5), LONG("long", 6), CUSTOM("custom", 7);
++    UNKNOWN("?", -1), ALL("-", 0), BASIC("basic", 1), TRADITIONAL("traditional", 2), MODERN("modern", 3), HIO("hio", 4), SHORT("short", 5), LONG("long", 6);
+ 
+     private final String dir;
+     private final int id;
+diff --git a/server/src/org/moparforia/server/track/TrackManager.java b/server/src/org/moparforia/server/track/TrackManager.java
+index 48af2e8..9926af1 100644
+--- a/server/src/org/moparforia/server/track/TrackManager.java
++++ b/server/src/org/moparforia/server/track/TrackManager.java
+@@ -82,7 +82,8 @@ public class TrackManager {
+         FileSystem fs = FileSystems.getDefault();
+         int counter = 0;
+         for (TrackCategory type : TrackCategory.values()) {
+-            if (type == TrackCategory.ALL || type == TrackCategory.CUSTOM || type == TrackCategory.UNKNOWN) {
++            //if (type == TrackCategory.ALL || type == TrackCategory.CUSTOM || type == TrackCategory.UNKNOWN) {
++            if (type == TrackCategory.ALL || type == TrackCategory.UNKNOWN) {
+                 continue;
+             }
+             Path tracksPath = fs.getPath("tracks", type.getDir());
+@@ -172,12 +173,18 @@ public class TrackManager {
+         if (number < 1 || number > 20) {
+             return null;
+         }
++	if (type == TrackCategory.UNKNOWN) {
++		type = TrackCategory.ALL;
++        }
+         ArrayList<Track> usedTracks = new ArrayList<Track>();// horrible
+         for (Track track : tracks) {
+-            if (TrackCategory.getByTypeId(track.getCategory()) == TrackCategory.ALL || TrackCategory.getByTypeId(track.getCategory()) == type) {
++            //if (TrackCategory.getByTypeId(track.getCategory()) == TrackCategory.ALL || TrackCategory.getByTypeId(track.getCategory()) == type) {
++            if (type == TrackCategory.ALL || TrackCategory.getByTypeId(track.getCategory()) == type) {
+                 usedTracks.add(track);
+             }
+         }
+         ArrayList<Track> randomTracks = new ArrayList<Track>(number);
+         for (int i = 0; i < number; i++) {
+             Track track = usedTracks.get((new Random()).nextInt(usedTracks.size()));
+diff --git a/server/src/org/moparforia/server/util/StockTrackUploader.java b/server/src/org/moparforia/server/util/StockTrackUploader.java
+index e34b425..bcb51d8 100644
+--- a/server/src/org/moparforia/server/util/StockTrackUploader.java
++++ b/server/src/org/moparforia/server/util/StockTrackUploader.java
+@@ -35,7 +35,8 @@ public class StockTrackUploader {
+         tracks = new ArrayList<Track>();
+         FileSystem fs = FileSystems.getDefault();
+         for (TrackCategory type : TrackCategory.values()) {
+-            if (type == TrackCategory.ALL || type == TrackCategory.CUSTOM || type == TrackCategory.UNKNOWN) {
++            //if (type == TrackCategory.ALL || type == TrackCategory.CUSTOM || type == TrackCategory.UNKNOWN) {
++            if (type == TrackCategory.ALL || type == TrackCategory.UNKNOWN) {
+                 continue;
+             }
+             Path tracksPath = fs.getPath("tracks", type.getDir());
